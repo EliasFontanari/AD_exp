@@ -1,0 +1,16 @@
+# Doxyfile.in - Doxygen configuration template
+# This file is processed by CMake to generate the actual Doxyfile
+
+PROJECT_NAME           = "Newton Solver"
+PROJECT_NUMBER         = "1.0"
+OUTPUT_DIRECTORY       = /home/elias/Documents/CPP/NewtonSolver/build/docs
+INPUT                  = /home/elias/Documents/CPP/NewtonSolver/include /home/elias/Documents/CPP/NewtonSolver/src
+FILE_PATTERNS          = *.h *.hpp *.cpp *.cc
+RECURSIVE              = YES
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+QUIET                  = NO
+WARNINGS               = YES
+EXTRACT_ALL            = NO
+EXTRACT_PRIVATE        = NO
+HAVE_DOT               = NO

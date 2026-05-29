@@ -1,0 +1,4 @@
+/home/elias/Documents/CPP/NewtonSolver/build/CMakeFiles/test_AD.dir
+/home/elias/Documents/CPP/NewtonSolver/build/CMakeFiles/doc.dir
+/home/elias/Documents/CPP/NewtonSolver/build/CMakeFiles/edit_cache.dir
+/home/elias/Documents/CPP/NewtonSolver/build/CMakeFiles/rebuild_cache.dir
