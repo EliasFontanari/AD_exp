@@ -61,13 +61,13 @@ int main() {
 
     // std::cout << "Evaluating function at initial guess:" << solver.initial_guess << std::endl;
     solver.solve(HelicalValley);
-    if (solver.success)    {
-        std::cout << "Solver converged in " << solver.iterations << " iterations." << std::endl;
-        std::cout << "Solution: " << solver.solution.transpose() << std::endl;
-        std::cout << "Function evaluation at transpose " << solver.F0.transpose() << std::endl;
+    if (solver.get_success()) {  
+        std::cout << "Solver converged in " << solver.get_iterations() << " iterations." << std::endl;
+        std::cout << "Solution: " << solver.get_solution().transpose() << std::endl;
+        // std::cout << "Function evaluation at transpose " << solver.F0.transpose() << std::endl;
 
     } else {
-        std::cout << "Solver did not converge after " << solver.iterations << " iterations." << std::endl;
+        std::cout << "Solver did not converge after " << solver.get_iterations() << " iterations." << std::endl;
     }
     // auto G = my_func_ad(guess);
     // solver.assign_F0(G);
