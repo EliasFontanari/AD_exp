@@ -33,13 +33,24 @@ Eigen::Matrix<NewtonSolver<4, 4>::AD_N, 4, 1> Wood(
     return out;
 }
 
-Eigen::Matrix<NewtonSolver<3, 3>::AD_N, 3, 1> HelicalValley(
-        const Eigen::Matrix<NewtonSolver<3, 3>::AD_N, 3, 1>& v)
+// Eigen::Matrix<NewtonSolver<3, 3>::AD_N, 3, 1> HelicalValley(
+//         const Eigen::Matrix<NewtonSolver<3, 3>::AD_N, 3, 1>& v)
+// {
+//     auto x = v[0], y = v[1], z = v[2];
+//     Eigen::Matrix<NewtonSolver<3, 3>::AD_N, 3, 1> out;
+//     out << 10 * (z - 10*atan2(y,x)/(2*M_PI)),
+//            10*(sqrt(x*x+y*y) - 1),
+//            z;
+//     return out;
+// }
+
+template<typename Scalar>
+Eigen::Matrix<Scalar, 3, 1> HelicalValley(
+    const Eigen::Matrix<Scalar, 3, 1>& v,Eigen::Matrix<Scalar, 3, 1>& out)
 {
     auto x = v[0], y = v[1], z = v[2];
-    Eigen::Matrix<NewtonSolver<3, 3>::AD_N, 3, 1> out;
-    out << 10 * (z - 10*atan2(y,x)/(2*M_PI)),
-           10*(sqrt(x*x+y*y) - 1),
+    out << 10 * (z - 10 * atan2(y, x) / (2 * M_PI)),
+           10 * (sqrt(x*x + y*y) - 1),
            z;
     return out;
 }
@@ -60,7 +71,7 @@ int main() {
     //     std::cout << "Jacobian at initial guess:\n" << *solver.J << std::endl;
 
     // std::cout << "Evaluating function at initial guess:" << solver.initial_guess << std::endl;
-    solver.solve(HelicalValley);
+    solver.solve(HelicalValley<decltype(solver)::AD_N>,HelicalValley<double>);
     if (solver.get_success()) {  
         std::cout << "Solver converged in " << solver.get_iterations() << " iterations." << std::endl;
         std::cout << "Solution: " << solver.get_solution().transpose() << std::endl;
