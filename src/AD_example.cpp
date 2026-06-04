@@ -5,12 +5,6 @@
 
 auto start = std::chrono::high_resolution_clock::now();  // Start timing
 
-Eigen::Matrix<double, 2, 1> my_func(const Eigen::Matrix<double, 3, 1>& v)
-{
-    double x = v[0], y = v[1], z = v[2];
-    return { x*x + sin(y),
-             x*y - exp(z) + z };
-}
 Eigen::Matrix<NewtonSolver<3, 2>::AD_N, 2, 1> my_func_ad(
         const Eigen::Matrix<NewtonSolver<3, 2>::AD_N, 3, 1>& v)
 {
@@ -33,17 +27,6 @@ Eigen::Matrix<NewtonSolver<4, 4>::AD_N, 4, 1> Wood(
     return out;
 }
 
-// Eigen::Matrix<NewtonSolver<3, 3>::AD_N, 3, 1> HelicalValley(
-//         const Eigen::Matrix<NewtonSolver<3, 3>::AD_N, 3, 1>& v)
-// {
-//     auto x = v[0], y = v[1], z = v[2];
-//     Eigen::Matrix<NewtonSolver<3, 3>::AD_N, 3, 1> out;
-//     out << 10 * (z - 10*atan2(y,x)/(2*M_PI)),
-//            10*(sqrt(x*x+y*y) - 1),
-//            z;
-//     return out;
-// }
-
 template<typename Scalar>
 Eigen::Matrix<Scalar, 3, 1> HelicalValley(
     const Eigen::Matrix<Scalar, 3, 1>& v,Eigen::Matrix<Scalar, 3, 1>& out)
@@ -55,11 +38,52 @@ Eigen::Matrix<Scalar, 3, 1> HelicalValley(
     return out;
 }
 
+template<typename Scalar>
+Eigen::Matrix<Scalar, 8, 1> ExtendedPowell(
+    const Eigen::Matrix<Scalar, 8, 1>& v,
+    Eigen::Matrix<Scalar, 8, 1>& out)
+{
+    // i = 1 (0-indexed: 0)
+    out[0] = v[0] + 10.0 * v[1];
+    out[1] = sqrt(5.0) * (v[2] - v[3]);
+    out[2] = (v[1] - 2.0 * v[2]) * (v[1] - 2.0 * v[2]);
+    out[3] = sqrt(10.0) * (v[0] - v[3]) * (v[0] - v[3]);
+
+    // i = 5 (0-indexed: 4)
+    out[4] = v[4] + 10.0 * v[5];
+    out[5] = sqrt(5.0) * (v[6] - v[7]);
+    out[6] = (v[5] - 2.0 * v[6]) * (v[5] - 2.0 * v[6]);
+    out[7] = sqrt(10.0) * (v[4] - v[7]) * (v[4] - v[7]);
+    return out;
+}
+
+template<typename Scalar>
+Eigen::Matrix<Scalar, 10, 1> DiscreteBoundaryValue(
+    const Eigen::Matrix<Scalar, 10, 1>& v,
+    Eigen::Matrix<Scalar, 10, 1>& out)
+{
+    constexpr int N = 10;
+    constexpr double h = 1.0 / (N + 1);
+
+    for (int i = 0; i < N; ++i)
+    {
+        double t = (i + 1) * h;  // t_i = i*h, 1-indexed so t1..t10
+
+        Scalar x_prev = (i == 0)     ? Scalar(0.0) : v[i - 1];  // x0 = 0
+        Scalar x_curr = v[i];
+        Scalar x_next = (i == N - 1) ? Scalar(0.0) : v[i + 1];  // x11 = 0
+
+        Scalar bracket = x_curr + t + 1.0;
+        out[i] = 2.0 * x_curr - x_prev - x_next + (h * h / 2.0) * bracket * bracket * bracket;
+    }
+    return out;
+}
+
 int main() {
     NewtonSolver<3, 3> solver;
     Eigen::Vector<double, 3> guess;
     
-    guess << 310.0, -8.0, 5.;
+    guess << -7,0,0; // Initial guess for the solution
     solver.set_initial_guess(guess);
 
 

@@ -7,8 +7,8 @@ struct NewtonSolverSettings
     int max_iterations = 1000;
     double tol = 1e-9;
     // Armijo line search parameters
-    double gamma = 0.1;
-    double beta = 0.8;
+    double gamma = 1e-4;
+    double beta = 0.5;
     double t_max = 1.0;
 };
 
@@ -122,16 +122,6 @@ class NewtonSolver
                 this->solution[i] = sol[i].val;
         }
 
-        bool multivariate_check_minor(Eigen::Matrix<double, M, 1> & lhs , Eigen::Matrix<double, M, 1> & rhs) 
-        {
-            for (int i = 0; i < M; ++i) {
-                if (lhs[i] > rhs[i]) {
-                    return false;
-                } 
-            }
-            return true; 
-        }
-
         double merit_fun(const Eigen::Matrix<double, N, 1> & x, Eigen::Matrix<double, M, 1> *& tmp,  FuncSigDouble func) {
             func(x, *tmp);
             return 0.5*pow((*tmp).norm(),2);
@@ -146,7 +136,7 @@ class NewtonSolver
             double t = settings.t_max;
             Eigen::Matrix<double, N,1> merit_grad = (*J).transpose() * (f_val_x);
             // while(!multivariate_check_minor(lhs,rhs) && iter < 50) {
-            while (!(merit_fun(x+t*d,lhs_armijo,func) - merit_fun(x,rhs_armijo,func) - settings.gamma*t*merit_grad.transpose()*d <= 0)) {
+            while (!(merit_fun(x+t*d,lhs_armijo,func) - merit_fun(x,rhs_armijo,func) - settings.gamma*t*merit_grad.transpose()*d <= 0) && t > 1e-6) {
                 t *= settings.beta;
                 // assign_M_AD_vector(func(x + t*d),lhs_armijo); // the sum of AD vector and standarf vector gives AD vector;
                 // assign_M_AD_vector(func(x) + settings.gamma * t * ((*J)*d) , rhs_armijo);
@@ -195,9 +185,10 @@ class NewtonSolver
                     {
                         success = true;
                         assign_solution(x);
-                        std::cout << "Converged in " << iterations << " iterations." << std::endl;
+                        std::cout << "Converged in " << iterations << " iterations. Norm of F: " << norm_F << std::endl;
                         return;
                     }
+                    std::cout << "Iteration " << iterations << ", norm of F: " << norm_F << std::endl;
                 }
             }
             else
