@@ -8,7 +8,6 @@
 #include "Newton_solver.hh"
 #include <chrono>             // include chrono to measure time
 
-auto start = std::chrono::high_resolution_clock::now();  // Start timing
 
 // Eigen::Matrix<NewtonSolver<3, 2>::AD_N, 2, 1> my_func_ad(
 //         const Eigen::Matrix<NewtonSolver<3, 2>::AD_N, 3, 1>& v)
@@ -90,6 +89,8 @@ void HelicalValley(
 // }
 
 int main() {
+    auto start = std::chrono::high_resolution_clock::now();  // Start timing
+
     NewtonSolver<3, 3> solver;
     Eigen::Vector<double, 3> guess;
     
