@@ -1,3 +1,8 @@
+/**
+ * \file Newton_solver.hh
+ * \brief Newton solver with Armijo line search using TinyAD.
+ */
+
 #include <TinyAD/Scalar.hh>
 #include <iostream>
 #include <cmath>
@@ -26,7 +31,7 @@ template <int N, int M>
 class NewtonSolver
 {
 public:
-    using AD_N = TinyAD::Double<N>;                                                                     ///< AD scalar type with N-dimensional gradient. It is the type that take into account the variables respect to which we differentiate.
+    using AD_N = TinyAD::Double<N>; // add false to not keep track of Hessian                                                                     ///< AD scalar type with N-dimensional gradient. It is the type that take into account the variables respect to which we differentiate.
     using FuncSig = void (*)(const Eigen::Matrix<AD_N, N, 1> &, Eigen::Matrix<AD_N, N, 1> &);           ///< It is the signature of the function that computes the system of equations to be differentiated. It takes as input an Eigen vector of AD scalars, and outputs an Eigen vector of AD scalars, which is the evaluation of the system of equations at the input point. The user has to provide a function with this signature to compute the system of equations to be solved.
     using FuncSigDouble = void (*)(const Eigen::Matrix<double, N, 1> &, Eigen::Matrix<double, N, 1> &); ///< Signature for the same function asa bove, but without automatic differentiation. Used when just an evaluation of the function is needed.
 

@@ -29,32 +29,3 @@ target_include_directories(test_AD PRIVATE
 )
 
 target_compile_options(test_AD PRIVATE -O2 -Wall -Wextra)
-
-# Doxygen documentation
-if(DOXYGEN_FOUND)
-  set(DOXYGEN_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/docs")
-  set(DOXYGEN_CONFIG_FILE "${CMAKE_CURRENT_BINARY_DIR}/Doxyfile")
-
-  configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in"
-    "${DOXYGEN_CONFIG_FILE}"
-    @ONLY
-  )
-
-  add_custom_target(doc
-    COMMAND "${DOXYGEN_EXECUTABLE}" "${DOXYGEN_CONFIG_FILE}"
-    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
-    COMMENT "Generating Doxygen HTML documentation"
-    VERBATIM
-  )
-else()
-  message(STATUS "Doxygen not found - documentation generation disabled")
-endif()
-
-message(STATUS "Eigen: ${EIGEN3_INCLUDE_DIR}")
-message(STATUS "TinyAD: ${TINYAD_INCLUDE_DIR}")
-message(STATUS "CppAD: ${CPPAD_INCLUDE_DIR}")
-message(STATUS "CppAD library: ${CPPAD_LIB}")
-message(STATUS "autodiff: ${AUTODIFF_INCLUDE_DIR}")
-message(STATUS "{fmt}: ${LOCAL_FMT_DIR}")
-message(STATUS "Doxygen: ${DOXYGEN_EXECUTABLE}")

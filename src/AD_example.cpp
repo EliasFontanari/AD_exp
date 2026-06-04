@@ -4,7 +4,6 @@
  */
 
 #include <stdio.h>
-#include <iostream>
 #include "Newton_solver.hh"
 #include <chrono>             // include chrono to measure time
 
@@ -32,7 +31,7 @@
 // }
 
 /**
- * @brief Helical Valley function, a common test problem for optimization algorithms. Every systems of equation has to be described by a function of this form, that is passes as argument to the solver.
+ * @brief Helical Valley function, a common test problem for optimization algorithms. Every systems of equation has to be described by a function of this form, that is passed as argument to the solver.
  * @tparam Scalar The scalar type of the input and output vectors. The solver requires double and double AD scalar type, the type used by TinyAD.
  * @param v The input vector representing the point at which to evaluate the function.
  * @param out The output vector where the function value will be stored.
