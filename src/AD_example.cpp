@@ -83,7 +83,7 @@ int main() {
     NewtonSolver<3, 3> solver;
     Eigen::Vector<double, 3> guess;
     
-    guess << -7,0,0; // Initial guess for the solution
+    guess << 310.0,-8.0,5.; // Initial guess for the solution
     solver.set_initial_guess(guess);
 
 

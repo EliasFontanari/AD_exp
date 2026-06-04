@@ -135,8 +135,9 @@ class NewtonSolver
             int iter = 0;
             double t = settings.t_max;
             Eigen::Matrix<double, N,1> merit_grad = (*J).transpose() * (f_val_x);
-            // while(!multivariate_check_minor(lhs,rhs) && iter < 50) {
-            while (!(merit_fun(x+t*d,lhs_armijo,func) - merit_fun(x,rhs_armijo,func) - settings.gamma*t*merit_grad.transpose()*d <= 0) && t > 1e-6) {
+            double merit_incr = settings.gamma * merit_grad.dot(d); 
+            double merit_val = merit_fun(x,rhs_armijo,func);  
+            while (!(merit_fun(x+t*d,lhs_armijo,func) - merit_val - t*merit_incr <= 0) && t > 1e-6) {
                 t *= settings.beta;
                 // assign_M_AD_vector(func(x + t*d),lhs_armijo); // the sum of AD vector and standarf vector gives AD vector;
                 // assign_M_AD_vector(func(x) + settings.gamma * t * ((*J)*d) , rhs_armijo);
@@ -170,8 +171,8 @@ class NewtonSolver
                     auto lu = J->fullPivLu();
                     d = -lu.solve(*F_val);
 
-                    double t = armijo_search(*x_double,d,func_double,*F_val); 
-                    // double t = 1.0; // for now, no line search
+                    // double t = armijo_search(*x_double,d,func_double,*F_val); 
+                    double t = 1.0; // for now, no line search
                     x += t*d;
                     assign_AD_vector(x, x_double); // update x_double for the Armijo line search in the next iteration
                     
